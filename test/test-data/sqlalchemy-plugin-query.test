@@ -11,7 +11,6 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
 
-
 session: Session
 
 query = session.query(User)
@@ -27,17 +26,14 @@ from sqlalchemy.orm.session import Session
 
 Base = declarative_base()
 
-
 class Employee(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     email = Column(String, nullable=False)
 
-
 class LoginInfo(Base):
     id = Column(Integer, ForeignKey(Employee.id), primary_key=True)
     password_hash = Column(String, nullable=False)
-
 
 session: Session
 query = session.query(Employee, LoginInfo)
@@ -56,12 +52,10 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
 
-
 session: Session
 
 query = session.query(User, User.id)
 reveal_type(query) # N: Revealed type is 'sqlalchemy.orm.query.Query[Tuple[main.User, builtins.int*, fallback=sqlalchemy.util._collections.AbstractKeyedTuple[Any]]]'
-
 
 [case testQueryMethods]
 # flags: --strict-optional
@@ -75,7 +69,6 @@ Base = declarative_base()
 class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-
 
 query: Query[User]
 reveal_type(query.get(123)) # N: Revealed type is 'Union[main.User*, None]'
@@ -94,7 +87,6 @@ Base = declarative_base()
 class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-
 
 session: Session
 query = session.query(User.id, User.name)
@@ -123,11 +115,9 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
 
-
 session: Session
 query = session.query(User.id)
 reveal_type(query)  # N: Revealed type is 'sqlalchemy.orm.query.Query[Tuple[builtins.int*, fallback=sqlalchemy.util._collections.AbstractKeyedTuple[Any]]]'
-
 
 [case unsupportedStuffGeneratesAny]
 # flags: --strict-optional
@@ -141,7 +131,6 @@ Base = declarative_base()
 class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-
 
 session: Session
 query = session.query(func.count(User.id))
