@@ -52,11 +52,27 @@ user_preference = Table('user_preference', metadata,
 [out]
 
 [case testColumnWithForeignKeyDeclarative]
+from typing import Optional
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, ForeignKey
 Base = declarative_base()
 
 class Mytable(Base):
     __tablename__ = 'mytable'
-    objid = Column(ForeignKey('othertable.objid'), index=True)
+    objid: Column[Optional[int]] = Column(ForeignKey('othertable.objid'), index=True)
+[out]
+
+[case testTableWithIndexes]
+from sqlalchemy import Column, Table, String, Integer, Index, MetaData, text, func
+metadata = MetaData()
+name_col = Column('name', String)
+test_table = Table('test', metadata,
+    Column('id', Integer, primary_key=True),
+    name_col,
+    Index('idx1', 'id', 'name'),
+    Index('idx1', 'id', name_col),
+    Index('idx1', 'id', func.lower(name_col)),
+    Index('idx1', 'id', text("lower(name)")),
+)
 [out]
